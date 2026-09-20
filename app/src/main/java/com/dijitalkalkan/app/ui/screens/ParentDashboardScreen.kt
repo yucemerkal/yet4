@@ -241,11 +241,8 @@ fun ParentDashboardScreen(onBack: () -> Unit, onOpenActivityLog: () -> Unit) {
 
 @Composable
 private fun PermissionRow(text: String, buttonText: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = text, modifier = Modifier.padding(top = 10.dp))
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+        Text(text = text, modifier = Modifier.padding(bottom = 6.dp))
         Button(onClick = onClick) { Text(buttonText) }
     }
 }
