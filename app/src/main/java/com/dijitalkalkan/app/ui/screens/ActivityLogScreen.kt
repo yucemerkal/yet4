@@ -1,13 +1,11 @@
 package com.dijitalkalkan.app.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -35,24 +33,26 @@ fun ActivityLogScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Etkinlik Geçmişi (Bugün)") }) }
     ) { padding: PaddingValues ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
+        ) {
             if (events.isEmpty()) {
-                Text("Bugün için henüz kayıt yok.")
+                item { Text("Bugün için henüz kayıt yok.") }
             } else {
-                LazyColumn(modifier = Modifier.weight(1f, fill = false)) {
-                    items(events) { e ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "${e.appLabel} ${if (e.opened) "açıldı" else "kapandı"}")
-                            Text(text = e.timeText())
-                        }
+                items(events) { e ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "${e.appLabel} ${if (e.opened) "açıldı" else "kapandı"}")
+                        Text(text = e.timeText())
                     }
                 }
             }
-            Button(onClick = onBack, modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
-                Text("Geri")
+            item {
+                Button(onClick = onBack, modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
+                    Text("Geri")
+                }
             }
         }
     }
