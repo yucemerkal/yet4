@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -50,67 +49,72 @@ fun ChildHomeScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Bugünkü Kullanımım") }) }
     ) { padding: PaddingValues ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
-
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
+        ) {
             if (!hasPermission) {
-                Text("Kullanım verilerini göstermek için izin gerekiyor.")
-                Button(
-                    onClick = { UsageStatsHelper.openUsageAccessSettings(context) },
-                    modifier = Modifier.padding(top = 12.dp)
-                ) {
-                    Text("İzin Ver")
+                item {
+                    Text("Kullanım verilerini göstermek için izin gerekiyor.")
+                    Button(
+                        onClick = { UsageStatsHelper.openUsageAccessSettings(context) },
+                        modifier = Modifier.padding(top = 12.dp)
+                    ) {
+                        Text("İzin Ver")
+                    }
                 }
             } else {
                 if (extraToday > 0) {
-                    Card(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
-                        Text(
-                            text = "Bugün kazanılan ek süre: +$extraToday dk",
-                            modifier = Modifier.padding(12.dp)
-                        )
-                    }
-                }
-
-                LazyColumn(modifier = Modifier.weight(1f, fill = false)) {
-                    items(usage) { app ->
-                        val baseLimit = limits[app.packageName]
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = app.appLabel)
-                            val limitText = if (baseLimit != null) " / ${baseLimit + extraToday} dk limit" else ""
-                            Text(text = "${app.minutesToday} dk$limitText")
+                    item {
+                        Card(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
+                            Text(
+                                text = "Bugün kazanılan ek süre: +$extraToday dk",
+                                modifier = Modifier.padding(12.dp)
+                            )
                         }
                     }
                 }
-            }
 
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
-            Text(text = "Ebeveyninden bir C-kod aldıysan buraya gir:")
-            OutlinedTextField(
-                value = code,
-                onValueChange = { code = it.filter { c -> c.isDigit() } },
-                label = { Text("C-kod") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-            )
-            Button(
-                onClick = {
-                    message = if (prefs.redeemSCode(code)) {
-                        code = ""
-                        "Ek süre eklendi!"
-                    } else {
-                        "Kod geçersiz veya daha önce kullanılmış."
+                items(usage) { app ->
+                    val baseLimit = limits[app.packageName]
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = app.appLabel)
+                        val limitText = if (baseLimit != null) " / ${baseLimit + extraToday} dk limit" else ""
+                        Text(text = "${app.minutesToday} dk$limitText")
                     }
-                },
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-            ) {
-                Text("Kodu Kullan")
+                }
             }
-            message?.let { Text(text = it, modifier = Modifier.padding(top = 8.dp)) }
 
-            Button(onClick = onBack, modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) {
-                Text("Geri")
+            item {
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                Text(text = "Ebeveyninden bir C-kod aldıysan buraya gir:")
+                OutlinedTextField(
+                    value = code,
+                    onValueChange = { code = it.filter { c -> c.isDigit() } },
+                    label = { Text("C-kod") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                )
+                Button(
+                    onClick = {
+                        message = if (prefs.redeemSCode(code)) {
+                            code = ""
+                            "Ek süre eklendi!"
+                        } else {
+                            "Kod geçersiz veya daha önce kullanılmış."
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                ) {
+                    Text("Kodu Kullan")
+                }
+                message?.let { Text(text = it, modifier = Modifier.padding(top = 8.dp)) }
+
+                Button(onClick = onBack, modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) {
+                    Text("Geri")
+                }
             }
         }
     }
