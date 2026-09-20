@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Dijital Koruyucu</string>
+    <string name="accessibility_service_description">Dijital Koruyucu\'nun, ebeveyn tarafından süre limiti konan uygulamaları tespit edip gerektiğinde kısıtlama ekranını gösterebilmesi, ve uygulamanın izinsiz kaldırılmasını caydırabilmesi için gereklidir.</string>
+</resources>
